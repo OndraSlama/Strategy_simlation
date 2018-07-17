@@ -1,0 +1,74 @@
+Custom_ball
+
+inklůdy v tomto pořadí:
+
+#include "Global.h"
+#include "ExtraMath.h"
+#include "PhyShapes.h"
+#include "Board.h"
+
+
+Základní parametry a konstanty jsou v Global.h
+	Všechno by mělo být stejně ajk máš ty a RP, jediný, s čím si bude potřeba pohrát jsou proměnný označený //CHANGEABLE
+	hlavně dej bacha na simulationFPS, aby souhlasily s rychlostí tvojí simulace
+
+
+Struktury, a jejich proměnné a metody, který tě zajímají, zbytek si najdi v kódu:
+
+Na souřadnice používám strukturu
+Vec2
+	float x
+	float y
+	plus nějaký metody
+	
+
+Míček
+Circle* ball;
+	Vec2 position
+	Vec2 velocity
+	void move()
+		- pohne míčkem podle rychlosti a velikosti kroku
+
+Stěny
+Box* boundary;
+	tohle tě nezajímá
+
+Osy
+	- 0 je brankář a 3 je útočník
+Axis blu[4];
+Axis red[4];
+	float velocity.y
+	float position.y
+		- ypsilonová složka Vec2, tu můžeš nastavovat explicitně, x-ové se nedotýkej
+
+	float angle
+	float angular_velocity
+
+	void move()
+		-pohle osou podle rychlosti a úhlové rychlosti, je lepší používat toto, pokud to půjde
+
+	void movePos(float pos, float ang)
+		-pohne osou okamžitě na určený místo s tím, že přepočítá rychlosti podle předchozí pozice
+		 a velikosti kroku, používej, jestli si rychlosti a ostatní věci počítáš bokem a chceš jen
+		 kontinuálně nastavovat pozici
+
+	Vec2 getPosition()
+		- vrátí přepočítanou pozici nohy hráče v x/y rovině, jestli chceš tahat pozici, používej toto
+
+
+
+Funkce
+void setupEverything()
+	- vytvoří všechny objekty a stuff, použij na začátku. Žádný objekty není potřeba vytvářet ručně
+
+void moveEverything()
+	- volá move() míčku a move() všech osmi os. Pokud potřebuješ používat movePos(), musíš si napsat vlastní funkci
+
+void collideEverything()
+	- spočítá a vyhodnotí kolize
+
+		-v každým loopu je potřeba vším pohnout a všechno zkolidovat
+
+
+void deleteEverything()
+	- hádej
