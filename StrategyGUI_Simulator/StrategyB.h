@@ -4,33 +4,22 @@
 
 class StrategyB : public BaseStrategy
 {
-public:
+	public:
 	StrategyB();
 	~StrategyB();
 
 	// Inherited from BaseStrategy
 	void Process();
-
-
-	void CalculateDesiredAxisPositions();
-
 	void Defend();
-	void PyramidDefense(int index = 4);
-
-	void Attack(int i);
-	void BackwardAttack(int i);
-
-	int CheckIfCanAttack();
-	void SetBall(double, double);
-
-	
-
-	void CameraInput(int x, int y);
+	void PyramidDefense();
+	void Kick(int i);
+	void BackwardKick(int i);
+	int CheckIfCanAttack();	
+	int CheckIfOponentHasBall();
 
 	int okoliW;
 	int okoliH;
-
-	double cameraTolerance;
-
+	int shotSpeedLimit;
+	int maxCyclesAfterAttack;
 
 };

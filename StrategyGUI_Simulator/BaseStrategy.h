@@ -7,39 +7,41 @@
 
 class BaseStrategy
 {
-public:
+	public:
 	BaseStrategy();
 	~BaseStrategy();
 
 	virtual void Process() = 0;
-	virtual void CameraInput(int, int) = 0;
-
-	void Reset();
+	virtual void CameraInput(int, int);
+	virtual void SetBall(double, double);	
 	virtual void CalculateTrajectory();
 	virtual void CalculateAxesIntersections();
+	virtual void CalculateDesiredAxisPositions();
+	void Reset();
 
 	Axis axes[4]; // dummies positions
 	Axis opponentAxes[4]; 
 
 	StrategyMode mode;
-	Ball ball; // zfiltrovany mic, se kterym pocitam
-	vector<Line> trajectory;
+	Ball ball; 				// zfiltrovany mic, se kterym pocitam
+	vector<Line> trajectory;	
+	double cameraTolerance;
+	int cyclesSinceAttackBeginning; // nepujdu na unknown mode hned po utoku, kvuli odrazu
 
-protected:
+	protected:
 
+	// Protected functions
 	void SetupAxis();
-
 	virtual Line TrajectoryUntilBounce(Ball&, bool&);
 
-
+	
 	Ball balls[3]; // skutecne pozice micu
 
 	int DummyX;
 	int DummyY;
 	Line field[4]; // field edges lines
 	int minSpeedLimit;
-
-	int cyclesSinceAttackBeginning; // nepujdu na unknown mode hned po utoku, kvuli odrazu
+	
 	int cycleLength;
 	int cyclesSinceLastCameraInput;
 	int goalWidth;

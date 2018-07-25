@@ -213,6 +213,13 @@ void Form1::pictureBox1_Paint(System::Object^  sender, System::Windows::Forms::P
 				e->Graphics->FillRectangle(System::Drawing::Brushes::Gray, System::Drawing::Rectangle((axis.X - DummyX / 2 + axis.xDisplacement) / 10, ((dummy.realPos - 3515)*-1 - DummyY / 2) / 10, DummyX / 10, DummyY / 10));
 				break;
 
+			case straight:
+				e->Graphics->FillRectangle(System::Drawing::Brushes::Red, System::Drawing::Rectangle((axis.X - DummyX / 2 + axis.xDisplacement) / 10, ((dummy.realPos - 3515)*-1 - DummyY / 2) / 10, DummyX / 10, DummyY / 10));
+				break;
+			case exactAngle:
+				e->Graphics->FillRectangle(System::Drawing::Brushes::Red, System::Drawing::Rectangle((axis.X - DummyX / 2 + axis.xDisplacement) / 10, ((dummy.realPos - 3515)*-1 - DummyY / 2) / 10, DummyX / 10, DummyY / 10));
+				break;
+
 			default:
 				break;
 			}
@@ -268,6 +275,14 @@ void Form1::pictureBox1_Paint(System::Object^  sender, System::Windows::Forms::P
 
 				case raised:
 					e->Graphics->FillRectangle(System::Drawing::Brushes::DarkGray, System::Drawing::Rectangle((12100 - axis.X - DummyX / 2 - axis.xDisplacement) / 10, ((dummy.realPos - 3515)*-1 - DummyY / 2) / 10, DummyX / 10, DummyY / 10));
+					break;
+
+				case straight:
+					e->Graphics->FillRectangle(System::Drawing::Brushes::Blue, System::Drawing::Rectangle((12100 - axis.X - DummyX / 2 - axis.xDisplacement) / 10, ((dummy.realPos - 3515)*-1 - DummyY / 2) / 10, DummyX / 10, DummyY / 10));
+					break;
+
+				case exactAngle:
+					e->Graphics->FillRectangle(System::Drawing::Brushes::Blue, System::Drawing::Rectangle((12100 - axis.X - DummyX / 2 - axis.xDisplacement) / 10, ((dummy.realPos - 3515)*-1 - DummyY / 2) / 10, DummyX / 10, DummyY / 10));
 					break;
 
 				default:
@@ -412,13 +427,13 @@ void Form1::MoveAxis()
 			}
 			break;
 		case forwardDefense:
-			if (sim->red[i].angle > -400)
+			if (sim->red[i].angle > -120)
 			{
-				player1axes[i]->angularSpeed = -10000;
+				player1axes[i]->angularSpeed = -5000;
 			}
-			else if (sim->red[i].angle < -420)
+			else if (sim->red[i].angle < -150)
 			{
-				player1axes[i]->angularSpeed = 500;
+				player1axes[i]->angularSpeed = 5000;
 			}
 			else
 			{
@@ -426,13 +441,13 @@ void Form1::MoveAxis()
 			}
 			break;
 		case backwardDefense:
-			if (sim->red[i].angle < 400)
+			if (sim->red[i].angle < 200)
 			{
-				player1axes[i]->angularSpeed = 10000;
+				player1axes[i]->angularSpeed = 5000;
 			}
-			else if (sim->red[i].angle > 420)
+			else if (sim->red[i].angle > 220)
 			{
-				player1axes[i]->angularSpeed = -500;
+				player1axes[i]->angularSpeed = -5000;
 			}
 			else
 			{
@@ -442,7 +457,35 @@ void Form1::MoveAxis()
 		case raised:
 			if (sim->red[i].angle > -900)
 			{
-				player1axes[i]->angularSpeed = -10000;
+				player1axes[i]->angularSpeed = -5000;
+			}
+			else
+			{
+				player1axes[i]->angularSpeed = 0;
+			}
+			break;
+		case straight:
+			if (sim->red[i].angle < -20)
+			{
+				player1axes[i]->angularSpeed = 5000;
+			}
+			else if (sim->red[i].angle > 20)
+			{
+				player1axes[i]->angularSpeed = -5000;
+			}
+			else
+			{
+				player1axes[i]->angularSpeed = 0;
+			}
+			break;
+		case exactAngle:
+			if (sim->red[i].angle < strategy1->axes->desiredAngle - 20)
+			{
+				player1axes[i]->angularSpeed = 5000;
+			}
+			else if (sim->red[i].angle > strategy1->axes->desiredAngle + 20)
+			{
+				player1axes[i]->angularSpeed = -5000;
 			}
 			else
 			{
@@ -485,13 +528,13 @@ void Form1::MoveAxis()
 				}
 				break;
 			case forwardDefense:
-				if (sim->blu[i].angle < 400)
+				if (sim->blu[i].angle < 120)
 				{
-					player2axes[i]->angularSpeed = 10000;
+					player2axes[i]->angularSpeed = 5000;
 				}
-				else if (sim->blu[i].angle > 420)
+				else if (sim->blu[i].angle > 150)
 				{
-					player2axes[i]->angularSpeed = -500;
+					player2axes[i]->angularSpeed = -5000;
 				}
 				else
 				{
@@ -499,13 +542,13 @@ void Form1::MoveAxis()
 				}
 				break;
 			case backwardDefense:
-				if (sim->blu[i].angle > -400)
+				if (sim->blu[i].angle > -200)
 				{
-					player2axes[i]->angularSpeed = -10000;
+					player2axes[i]->angularSpeed = -5000;
 				}
-				else if (sim->blu[i].angle < -420)
+				else if (sim->blu[i].angle < -220)
 				{
-					player2axes[i]->angularSpeed = 500;
+					player2axes[i]->angularSpeed = 5000;
 				}
 				else
 				{
@@ -515,7 +558,21 @@ void Form1::MoveAxis()
 			case raised:
 				if (sim->blu[i].angle < 900)
 				{
-					player2axes[i]->angularSpeed = 10000;
+					player2axes[i]->angularSpeed = 5000;
+				}
+				else
+				{
+					player2axes[i]->angularSpeed = 0;
+				}
+				break;
+			case straight:
+				if (sim->blu[i].angle < -10)
+				{
+					player2axes[i]->angularSpeed = 2000;
+				} 
+				else if (sim->blu[i].angle > 10)
+				{
+					player2axes[i]->angularSpeed = -2000;
 				}
 				else
 				{
@@ -542,7 +599,7 @@ void Form1::timerMain_Tick(Object^  sender, EventArgs^  e)
 	if (cyclesToCameraCycle-- == 0)
 	{
 		timerCamera_Tick();
-		cyclesToCameraCycle = cameraInterval / 2;
+		cyclesToCameraCycle = cameraInterval;
 	}
 
 	// output to framework, desired axis positions
@@ -876,6 +933,9 @@ String^ Form1::AxisModeEnumToString(int i)
 
 	case raised:
 		return "raised";
+
+	case straight:
+		return "straight";
 
 	default:
 		return "";

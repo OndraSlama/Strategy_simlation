@@ -10,25 +10,29 @@ public:
 
 	// Inherited from BaseStrategy
 	void Process();
-	void CameraInput(int x, int y);
-
-
 
 private:
 
-	void CalculateDesiredAxisPositions();
+	int Sign(double arg);
+
 	void Defend();
-	void PyramidDefense(int index = 4);
-
-	void Attack(int i);
-	void BackwardAttack(int i);
-
-	int CheckIfCanAttack();
-	void SetBall(double, double);
+	void Attack();
+	void Block();
+	void GoalKeeper();
+	void Forward();
 	
-	int okoliW;
-	int okoliH;
+	void PyramidDefence();
 
-	double cameraTolerance;
+	void NormalDefence(int i);
+	void RaisedAttack(int i);
+	void Kick(int i);
+	void BackwardKick(int i);
+	void BlockOpponent(int i);
+	void GetBehindBall(int i);
 
+	int kickAreaLength;
+	int kickAreaWidth;
+	int kickAreaStart;
+	int kickYSpeedLimit;
+	int kickXSpeedLimit;
 };

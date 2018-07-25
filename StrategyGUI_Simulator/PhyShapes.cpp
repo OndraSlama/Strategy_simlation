@@ -303,7 +303,7 @@ void Phy::resolveCollision(Contact* c) {
 			circle->velocity = circle->velocity.scale((450 + c->axis.angle)*(450 - c->axis.angle) / 202500);
 		}
 		else {
-			circle->velocity.y /= 2;
+		//	circle->velocity.y /= 1;
 		}
 	}
 

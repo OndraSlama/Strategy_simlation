@@ -74,7 +74,7 @@ namespace StrategyGUISimulator {
 			 int DummyX = 120; // X
 			 int DummyY = 210; // Y
 			 int ballRadius = 175;
-			 int maxAcc = 3;
+			 int maxAcc = 20;
 			 int TimeZoom;
 
 	private: System::Windows::Forms::Timer^  timerMain;
@@ -381,7 +381,7 @@ private: System::Windows::Forms::TextBox^  ballCurrentPositionX;
 				 this->PosY->Name = L"PosY";
 				 this->PosY->Size = System::Drawing::Size(76, 20);
 				 this->PosY->TabIndex = 3;
-				 this->PosY->Text = L"600";
+				 this->PosY->Text = L"-1300";
 				 // 
 				 // VelX
 				 // 
@@ -389,7 +389,7 @@ private: System::Windows::Forms::TextBox^  ballCurrentPositionX;
 				 this->VelX->Name = L"VelX";
 				 this->VelX->Size = System::Drawing::Size(76, 20);
 				 this->VelX->TabIndex = 4;
-				 this->VelX->Text = L"-10";
+				 this->VelX->Text = L"10";
 				 // 
 				 // VelY
 				 // 
@@ -397,7 +397,7 @@ private: System::Windows::Forms::TextBox^  ballCurrentPositionX;
 				 this->VelY->Name = L"VelY";
 				 this->VelY->Size = System::Drawing::Size(78, 20);
 				 this->VelY->TabIndex = 5;
-				 this->VelY->Text = L"2";
+				 this->VelY->Text = L"8";
 				 // 
 				 // label1
 				 // 
@@ -502,7 +502,7 @@ private: System::Windows::Forms::TextBox^  ballCurrentPositionX;
 				 this->tbxFPS->Name = L"tbxFPS";
 				 this->tbxFPS->Size = System::Drawing::Size(100, 20);
 				 this->tbxFPS->TabIndex = 16;
-				 this->tbxFPS->Text = L"40";
+				 this->tbxFPS->Text = L"300";
 				 // 
 				 // label4
 				 // 
@@ -982,7 +982,7 @@ private: System::Windows::Forms::TextBox^  ballCurrentPositionX;
 				 this->tbxCameraError->Name = L"tbxCameraError";
 				 this->tbxCameraError->Size = System::Drawing::Size(100, 20);
 				 this->tbxCameraError->TabIndex = 70;
-				 this->tbxCameraError->Text = L"50";
+				 this->tbxCameraError->Text = L"20";
 				 // 
 				 // label6
 				 // 
@@ -1076,7 +1076,7 @@ private: System::Windows::Forms::TextBox^  ballCurrentPositionX;
 				 this->tbxTimeZoom->Name = L"tbxTimeZoom";
 				 this->tbxTimeZoom->Size = System::Drawing::Size(100, 20);
 				 this->tbxTimeZoom->TabIndex = 91;
-				 this->tbxTimeZoom->Text = L"15";
+				 this->tbxTimeZoom->Text = L"30";
 				 // 
 				 // label37
 				 // 

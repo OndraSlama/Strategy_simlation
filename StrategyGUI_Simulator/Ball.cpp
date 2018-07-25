@@ -3,7 +3,7 @@
 
 Ball::Ball()
 {
-	center = Point(-1000, 0);
+	center = Point(-100, 0);
 	radius = 175;
 	vector = Vector();
 	speed = 0;

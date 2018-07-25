@@ -89,7 +89,9 @@ enum AxisMode
 	backwardDefense,
 	forwardShoot,
 	backwardShoot,
-	raised
+	raised,
+	straight,
+	exactAngle
 };
 
 
@@ -110,6 +112,7 @@ struct Axis
 	Axis() {}
 	int intersectionY;
 	int desiredIntercept;
+	int desiredAngle;
 
 	double acceleration;
 	double speed;
@@ -122,6 +125,7 @@ struct Axis
 	Axis(vector<int> d, int x, int ymin, int ymax)
 	{
 		desiredIntercept = 0;
+		desiredAngle = 0;
 		intersectionY = 5000;
 		X = x;
 		for (int i = 0; i < d.size(); i++)
