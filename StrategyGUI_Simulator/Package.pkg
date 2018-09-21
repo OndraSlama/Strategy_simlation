@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?AutomationStudio Version=4.3.4.121 SP?>
+<Package xmlns="http://br-automation.co.at/AS/Package">
+  <Objects>
+    <Object Type="File">Ball.cpp</Object>
+    <Object Type="File">Ball.h</Object>
+    <Object Type="File">BaseStrategy.cpp</Object>
+    <Object Type="File">BaseStrategy.h</Object>
+    <Object Type="File">StrategyB.cpp</Object>
+    <Object Type="File">StrategyB.h</Object>
+    <Object Type="File">StrategyC.cpp</Object>
+    <Object Type="File">StrategyC.h</Object>
+    <Object Type="File">Structs.h</Object>
+  </Objects>
+</Package>

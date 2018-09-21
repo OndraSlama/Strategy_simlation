@@ -12,6 +12,7 @@ BaseStrategy::BaseStrategy()
 	cycleLength = 2;
 	cyclesSinceLastCameraInput = 0;
 	cyclesSinceAttackBeginning = 0;
+	sameCameraInputsInRow = 0;
 
 	StrategyMode mode = defense;
 
@@ -20,15 +21,18 @@ BaseStrategy::BaseStrategy()
 
 	goalWidth = 1065;
 
-	minSpeedLimit = 3;
+	minSpeedLimit = 6;
 
-	field[0] = Line(0, -3515, 0, 3515);			//left
-	field[1] = Line(0, 3515, 12100, 3515);		//top
-	field[2] = Line(12100, 3515, 12100, -3515); //right
+	field[0] = Line(0, -3515, 0, 3515);				//left
+	field[1] = Line(0, 3515, 12100, 3515);			//top
+	field[2] = Line(12100, 3515, 12100, -3515); 	//right
 	field[3] = Line(12100, -3515, 0, -3515);		//bottom
 
-	SetupAxis();
-
+	SetupAxis();	
+	
+	vectorXFilter = Filter(0.6, 2, 1);
+	vectorYFilter = Filter(0.6, 2, 1);
+	speedFilter = Filter(5, 3, 1.5);
 }
 
 
@@ -160,7 +164,7 @@ void BaseStrategy::CalculateTrajectory()
 	Line currentLine;
 	trajectory.clear();
 
-	while (!last && trajectory.size() < 10)
+	while (!last && trajectory.size() < 5)
 	{
 		currentLine = TrajectoryUntilBounce(curball, last);
 		trajectory.push_back(currentLine);
@@ -210,6 +214,14 @@ void BaseStrategy::CalculateAxesIntersections()
 
 void BaseStrategy::CameraInput(int x, int y)
 {
+	if(x == ball.center.X && y == ball.center.Y){
+		if(sameCameraInputsInRow < 3){
+			sameCameraInputsInRow++;
+			return;					
+		}
+	}else{
+		sameCameraInputsInRow = 0;
+	}
 
 	balls[2] = balls[1];
 	balls[1] = balls[0];
@@ -311,13 +323,15 @@ void BaseStrategy::SetBall(double x, double y)
 		balls[0].vector.length = 0;
 		balls[0].vector.X = 0;
 		balls[0].vector.Y = 0;
-		balls[0].speed = 0;
+		balls[0].speed = 0;			
+
+		
 		
 		ball.vector.length = 0;
 		ball.vector.X = 0;
-		ball.vector.Y = 0;
-		ball.speed = 0;
-
+		ball.vector.Y = 0;//vectorYFilter.filterData(0);
+		ball.speed = 0;//speedFilter.filterData(0);
+		
 		ball.lastCenter = ball.center;
 
 		return;
@@ -390,6 +404,9 @@ void BaseStrategy::SetBall(double x, double y)
 
 	ball.lastCenter.X = ball.center.X - ball.vector.X*ball.vector.length;
 	ball.lastCenter.Y = ball.center.Y - ball.vector.Y*ball.vector.length;
+	
+	// Filter	
+	ball.vector.X = vectorXFilter.filterData(ball.vector.X);
 
 }
 

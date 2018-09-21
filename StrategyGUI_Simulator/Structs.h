@@ -149,3 +149,50 @@ struct Axis
 	}
 
 };
+
+struct Filter{
+	
+	float threshold;
+	float lowGain;
+	float highGain;
+
+	float raw;
+	float diff;
+	float addition;
+	float prevFiltered;
+	float filtered;
+	
+	Filter(){}
+	
+	Filter(float th, float lg, float hg){
+		threshold = th;
+		lowGain = lg;
+		highGain = hg;
+		
+		diff = 0;
+		prevFiltered = 0;
+		filtered = 0;
+	}
+	
+	float abs(float data){
+		if(data < 0) data *= -1;
+		return data;
+	}
+	
+	float filterData(float data){
+		
+		raw = data;
+		diff = data - prevFiltered;				
+		if(abs(diff) < threshold){
+			addition = ((float)1.f/(float)lowGain * (float)abs(diff)/threshold) * (float)diff;			
+		}else{
+			addition = (float)1.f/(float)highGain * (float)diff;
+		}
+		
+		filtered = prevFiltered + addition;		
+		prevFiltered = filtered;
+		
+		return filtered;
+	}
+	
+};

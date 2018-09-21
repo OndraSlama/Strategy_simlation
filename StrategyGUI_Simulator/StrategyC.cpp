@@ -3,12 +3,14 @@
 StrategyC::StrategyC()
 {
 	mode = defense;
-	cameraTolerance = 0.53;
-	kickAreaLength = 300;
+	cameraTolerance = 0.7;
+	kickAreaLength = 350;
 	kickAreaWidth = 200;
-	kickAreaStart = 200;
-	kickYSpeedLimit = 10;
-	kickXSpeedLimit = 40;
+	kickAreaStart = 300;
+	kickYSpeedLimit = 5;
+	kickXSpeedLimit = 20;
+	advanceFactor = 50;
+	
 }
 
 StrategyC::~StrategyC()
@@ -32,7 +34,7 @@ void StrategyC::Process()
 	Attack(); // Performs attack
 	Block(); // Block if infront of opponent with ball
 	GoalKeeper(); // Special behaviour for goal keeper
-	Forward(); // Special behaviour for 
+	Forward(); // Special behaviour for forwarder
 	
 	CalculateDesiredAxisPositions(); // Calculate where the axis should move based on desired positions of dummies	
 }
@@ -51,10 +53,10 @@ void StrategyC::Defend() {
 
 void StrategyC::Attack() {
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 1; i < 4; i++) { // every axis except goalkeeper
 		if (ball.vector.X > 0 && ball.center.X < axes[i].X){
 			RaisedAttack(i);
-		}else if (ball.state == unknown && ball.center.X - ball.radius < axes[i].X) {
+		}else if (ball.state == unknown && ball.center.X - ball.radius < axes[i].X) {			
 			RaisedAttack(i);
 		}
 
@@ -79,28 +81,39 @@ void StrategyC::GoalKeeper() {
 }
 
 void StrategyC::Forward() {
-	if (ball.center.X > axes[3].X) {
+	int axis = 2;	
+		
+	if(ball.center.X < axes[axis].X + axes[axis].xDisplacement)
+		return;
 
-		if (ball.speed > kickXSpeedLimit) 
-			return;
+	if (ball.speed > kickXSpeedLimit) 
+		return;		
+		
+	if(!BallInArea(axis, 1.5))
+		return;			
+	
+	axes[axis].mode = forwardShoot;
+	mode = attack;
+	
+}
 
-		// check if in area of kick
-		if (ball.center.X > axes[3].X + 2*kickAreaLength)	
-			return;
+bool StrategyC::BallInArea(int i, float scale){
+	// check if in area of kick
+	if (ball.center.X > axes[i].X + scale*kickAreaLength)	
+		return false;
 
-		if (ball.center.X < axes[3].X + (axes[3].xDisplacement < -kickAreaStart ? -kickAreaStart : axes[3].xDisplacement)) 
-			return;
+	if (ball.center.X < axes[i].X - kickAreaStart) 
+		return false;
+		
+	// check for individual dummy
+	for (int j = 0; j < axes[i].dummies.size(); j++) {
 
-		// check for individual dummy
-		for (int j = 0; j < axes[3].dummies.size(); j++) {
-
-			if (abs(axes[3].dummies[j].realPos - ball.center.Y) < 1.5 * kickAreaWidth) {
-				axes[3].mode = forwardShoot;
-				mode = attack;
-				break;
-			}
+		if (abs(axes[i].dummies[j].realPos - ball.center.Y) < scale * kickAreaWidth) {
+			return true;
 		}
 	}
+	
+	return false;
 }
 
 void StrategyC::PyramidDefence() {
@@ -153,14 +166,19 @@ void StrategyC::NormalDefence(int i) {
 	if (ball.state == unknown) {
 		axes[i].mode = straight;
 	}
+	
+	if (abs(ball.vector.Y * ball.speed) > kickYSpeedLimit) {
+		axes[i].desiredIntercept = ball.center.Y + Sign(ball.vector.Y) * ball.speed * advanceFactor;
+	}
 }
 
 void StrategyC::RaisedAttack(int i) {	
-
-	axes[i].mode = raised;
-
+	if(!BallInArea(i, 1)){
+		axes[i].mode = raised;
+	}
+	
 	int y;
-	int sign = Sign(ball.vector.Y);
+	int sign = Sign(ball.center.Y);
 
 	if (ball.state == known && mode == attack) {
 		y = axes[i].intersectionY;
@@ -172,36 +190,25 @@ void StrategyC::RaisedAttack(int i) {
 	// to avoid blocking view of the ball
 	axes[i].desiredIntercept = y + 2 * sign * ball.radius;
 
-	if (ball.center.X > axes[i].X + (axes[i].xDisplacement < -2*kickAreaStart ? -2*kickAreaStart : axes[i].xDisplacement)) {
-		axes[i].desiredIntercept = ball.center.Y;
+	if (ball.center.X > axes[i].X + (axes[i].xDisplacement < -kickAreaStart ? -kickAreaStart : axes[i].xDisplacement)) {
+		axes[i].desiredIntercept = ball.center.Y + Sign(ball.vector.Y) * ball.speed * advanceFactor;
 	}
 }
 
 void StrategyC::Kick(int i){
 	
 	// check speed limits
-	if (abs(ball.speed * ball.vector.Y) > kickYSpeedLimit || abs(ball.speed * ball.vector.X) > kickXSpeedLimit) {
+	if (abs(ball.speed * ball.vector.Y) > kickYSpeedLimit || abs(ball.speed * ball.vector.X) > kickXSpeedLimit) 
+		return;		
+	
+	if(ball.center.X < axes[i].X + axes[i].xDisplacement)
 		return;
-	}
-
-	// check if in area of kick
-	if (ball.center.X > axes[i].X + kickAreaLength) {
+		
+	if(!BallInArea(i, 1))
 		return;
-	}
-
-	if (ball.center.X < axes[i].X + (axes[i].xDisplacement < -kickAreaStart ? -kickAreaStart : axes[i].xDisplacement)) {
-		return;
-	}		
-
-	// check for individual dummy
-	for (int j = 0; j < axes[i].dummies.size(); j++) {
-
-		if (abs(axes[i].dummies[j].realPos - ball.center.Y) < kickAreaWidth){
-			axes[i].mode = forwardShoot;
-			mode = attack;
-			break;
-		}
-	}	
+	
+	axes[i].mode = forwardShoot;
+	mode = attack;
 }
 
 void StrategyC::BlockOpponent(int i) {
@@ -232,7 +239,7 @@ void StrategyC::GetBehindBall(int i) {
 
 		if (abs(axes[i].dummies[0].realPos - ball.center.Y) > 2 * ball.radius) {
 			axes[i].mode = exactAngle;
-			axes[i].desiredAngle < -450 ? axes[i].desiredAngle = -450 : axes[i].desiredAngle -= 50;
+			axes[i].desiredAngle < -270 ? axes[i].desiredAngle = -270 : axes[i].desiredAngle -= 30;
 		}
 	}
 

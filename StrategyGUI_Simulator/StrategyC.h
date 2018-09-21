@@ -29,10 +29,13 @@ private:
 	void BackwardKick(int i);
 	void BlockOpponent(int i);
 	void GetBehindBall(int i);
+	bool BallInArea(int i, float scale);
 
 	int kickAreaLength;
 	int kickAreaWidth;
 	int kickAreaStart;
 	int kickYSpeedLimit;
 	int kickXSpeedLimit;
+	int advanceFactor;
+
 };

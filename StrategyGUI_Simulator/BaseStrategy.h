@@ -17,10 +17,13 @@ class BaseStrategy
 	virtual void CalculateTrajectory();
 	virtual void CalculateAxesIntersections();
 	virtual void CalculateDesiredAxisPositions();
-	void Reset();
-
+	void Reset();			
+	Filter vectorXFilter;
+	Filter vectorYFilter;
+	Filter speedFilter;	
+	
 	Axis axes[4]; // dummies positions
-	Axis opponentAxes[4]; 
+	Axis opponentAxes[4];
 
 	StrategyMode mode;
 	Ball ball; 				// zfiltrovany mic, se kterym pocitam
@@ -44,5 +47,6 @@ class BaseStrategy
 	
 	int cycleLength;
 	int cyclesSinceLastCameraInput;
+	int sameCameraInputsInRow;
 	int goalWidth;
 };
